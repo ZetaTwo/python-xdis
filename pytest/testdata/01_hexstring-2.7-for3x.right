@@ -7,7 +7,7 @@
 # First Line:        6
 # Constants:
 #    0: <xdis.code.thingy instance at 0xdeadbeef0000>
-#    1: 'abc'
+#    1: "abc"
 #    2: b'abc~\x80\x81\x82'
 #    3: None
 # Names:
@@ -18,7 +18,7 @@
                6 STORE_NAME                0 (f)
 
   9:           9 LOAD_NAME                 0 (f)
-              12 LOAD_CONST                1 ('abc')
+              12 LOAD_CONST                1 ("abc")
               15 CALL_FUNCTION             1 (1 positional, 0 named)
               18 LOAD_CONST                2 (b'abc~\x80\x81\x82')
               21 COMPARE_OP                2 (==)

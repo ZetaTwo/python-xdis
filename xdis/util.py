@@ -106,8 +106,15 @@ def is_negative_zero(n):
     return n == 0.0 and copysign(1, n) == -1
 
 def better_repr(v):
-    """Work around Python's unorthogonal and unhelpful repr() for primitive float
-    and complex."""
+    """
+    We want eval(repr(x)) to be indistinguishable from x short of introspection.
+    Python's repr currently doesn't cut that, specifically for floats values
+    "nan" and so on. As well as float -0.0 vs +0.0 from which complex numbers are
+    built on.
+
+    Finally, for strings, since we use the below in Python programs, we'll
+    prefer '"" since that is what blacken and PEP cultists prefer.
+    """
     if isinstance(v, float):
         # float values 'nan' and 'inf' are not directly
         # representable in Python before Python 3.5. In Python 3.5
@@ -115,7 +122,7 @@ def better_repr(v):
         # will canonicalize representation of these value as
         # float('nan') and float('inf')
         if str(v) in frozenset(["nan", "-nan", "inf", "-inf"]):
-            return "float('%s')" % v
+            return 'float("%s")' % v
         elif is_negative_zero(v):
             return "-0.0"
         return repr(v)
@@ -136,6 +143,15 @@ def better_repr(v):
             return "[%s,]" % better_repr(v[0])
         return "[%s]" % ", ".join(better_repr(i) for i in v)
     # TODO: elif deal with sets and dicts
+    elif isinstance(v, str):
+        # Python style checkers now prefer double quotes over single quotes,
+        # even though repr hasn't caught up. There is probably a *lot* more we
+        # could do here, but we'll handle the simplest of cases for now.
+        if '"' not in v:
+            return '"%s"' % v
+        else:
+            return repr(v)
+        pass
     else:
         return repr(v)
 
